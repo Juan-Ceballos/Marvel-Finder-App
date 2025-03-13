@@ -4,13 +4,24 @@ const API_BASE_URL = import.meta.env.API_BASE_URL
 const API_MARVEL_PUBLIC_KEY = import.meta.env.API_MARVEL_PUBLIC_KEY
 const API_MARVEL_PRIVATE_KEY = import.meta.env.API_MARVEL_PRIVATE_KEY
 
-const COMICS_ENTITY_QUERY = "comics"
-const CHARACTERS_ENTITY_QUERY = "characters"
+const COMICS_ENDPOINT = "comics"
+const CHARACTERS_ENDPOINT = "characters"
 
 const ts = Date.now()
 const hashInput = ts + API_MARVEL_PRIVATE_KEY + API_MARVEL_PUBLIC_KEY
 const hash = Crypto.MD5(hashInput).toString()
 
+const buildUrl = (endpoint, params = {}) => {
+    const url = new URL(`${API_BASE_URL}${endpoint}`)
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            url.searchParams.append(key, value)
+        }
+    })
+    
+    return url.toString()
+}
 
 // arrow function for handleResponse
 // async required when using await
@@ -27,17 +38,22 @@ const handleResponse = async (response) => {
 };
 
 // request using endpoint
-const request = async(endpoint) => {
-
+const request = async(endpoint, params = {}) => {
     try {
-        // response will be the fetch using url and enpoint
-        const response = await fetch(`${API_BASE_URL}${endpoint}`)
-        // use handleResponse to take the response and return json
+        const url = buildUrl(endpoint, params)
+        const response = await fetch(url)
         return await handleResponse(response)
-    } catch(error) {
+    } catch (error) {
         console.error('API request failed:', error)
         throw error
     }
 }
 
 // API Methods
+export const marvelComicsAPI = {
+    getCharacterByName: (params) => request(CHARACTERS_ENDPOINT, params)
+}
+
+export default {
+    character: marvelComicsAPI
+}
