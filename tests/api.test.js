@@ -1,7 +1,13 @@
 import { describe, test, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { marvelComicsAPI } from "../src/services/api";
+import { createMarvelAPI } from "../src/services/api";
 
-const mockFetch = vi.fn
+const mockFetch = vi.fn()
+
+const marvelComicsAPI = createMarvelAPI({
+    baseUrl: 'https://gateway.marvel.com/v1/public/',
+    publicKey: 'test-publick-key',
+    privateKey: 'test-private-key'
+})
 
 describe('Marvel API Service', () => {
     beforeEach(() => {
