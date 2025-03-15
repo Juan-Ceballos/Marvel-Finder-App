@@ -71,9 +71,6 @@ export const createMarvelAPI = (config = {}) => {
     }
 }
 
-
-
-
 // API Methods
 export const marvelComicsAPI = createMarvelAPI()
 
