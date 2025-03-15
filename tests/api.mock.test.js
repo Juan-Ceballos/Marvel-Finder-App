@@ -15,7 +15,6 @@ const marvelComicsAPI = createMarvelAPI({
 describe('Marvel API Service', () => {
     beforeEach(() => {
         vi.stubGlobal('fetch', mockFetch)
-        vi.stubGlobal('console', {...console, error: vi.fn()})
     })
 
     afterEach(() => {
