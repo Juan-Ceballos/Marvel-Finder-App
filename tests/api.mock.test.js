@@ -1,5 +1,6 @@
 import { describe, test, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createMarvelAPI } from "../src/services/api";
+import { ResponseError } from "../src/services/error-service";
 
 // mocks fetch request
 const mockFetch = vi.fn()
@@ -54,11 +55,13 @@ describe('Marvel API Service', () => {
         mockFetch.mockResolvedValueOnce({
             ok: false,
             status: 404,
+            statusText: "Not Found",
+            url: "https://api.example.com/characters",
             json: async () => ({message: 'Character not found'})
         })
 
         await expect(marvelComicsAPI.getCharacterByName({name: 'Blippy'}))
-            .rejects.toThrow('Character not found')
+            .rejects.toThrow(ResponseError)
     })
 
 })

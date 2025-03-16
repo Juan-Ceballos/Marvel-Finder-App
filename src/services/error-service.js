@@ -6,6 +6,17 @@ class APIError extends Error {
     }
 }
 
+class ResponseError extends APIError {
+    constructor(url, statusCode, statusText, response = null, status = statusCode) {
+        super(`Request to ${url} failed with status: ${statusCode} ${statusText}`, status)
+        this.name = "ResponseError"
+        this.url = url
+        this.statusCode = statusCode
+        this.statusText = statusText
+        this.response = response
+    }
+}
+
 class InvalidURLError extends APIError {
     constructor(url, reason, status = 400) {
         super(`Invalid URL: ${url} - ${reason}`, status)
@@ -46,6 +57,7 @@ class RateLimitError extends APIError {
 
 export {
     APIError,
+    ResponseError,
     NotFoundError,
     ValidationError,
     InvalidURLError,
