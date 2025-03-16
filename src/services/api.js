@@ -1,30 +1,38 @@
 import md5 from 'md5'
+import {
+    APIError,
+    NotFoundError,
+    ValidationError,
+    InvalidURLError,
+    AuthorizationError,
+    RateLimitError
+} from './error-service.js'
+
 
 // wrapper function to abstract away the use of fetch and process involved such as
 // calling fetch, managing api keys, handling response, and formatting url 
-export const createMarvelAPI = (config = {}) => {
-    // grab url and keys and set them in variable
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-    const API_MARVEL_PUBLIC_KEY = import.meta.env.VITE_API_MARVEL_PUBLIC_KEY
-    const API_MARVEL_PRIVATE_KEY = import.meta.env.VITE_API_MARVEL_PRIVATE_KEY
-    
+export const createMarvelAPI = ({
+    baseUrl = import.meta.env.VITE_API_BASE_URL,
+    publicKey = import.meta.env.VITE_API_MARVEL_PUBLIC_KEY,
+    privateKey = import.meta.env.VITE_API_MARVEL_PRIVATE_KEY
+} = {}) => {
     // possible endpoints
     const COMICS_ENDPOINT = "comics"
     const CHARACTERS_ENDPOINT = "characters"
     
     // set up hash using timestamp and keys
     const ts = Date.now()
-    const hashInput = ts + API_MARVEL_PRIVATE_KEY + API_MARVEL_PUBLIC_KEY
+    const hashInput = ts + privateKey + publicKey
     const hash = md5(hashInput)
 
     // use endpoint and takes arguments for queries to create url
     const buildUrl = (endpoint, params = {}) => {
-        const url = new URL(`${API_BASE_URL}${endpoint}`)
+        const url = new URL(`${baseUrl}${endpoint}`)
 
         // object with timestamp, key, hash for common url and adds extra params at end
         const finalParams = {
             ts: ts,
-            apikey: API_MARVEL_PUBLIC_KEY,
+            apikey: publicKey,
             hash: hash,
             ...params
         }
@@ -61,8 +69,7 @@ export const createMarvelAPI = (config = {}) => {
             const response = await fetch(url)
             return await handleResponse(response)
         } catch (error) {
-            console.error('API request failed:', error)
-            throw error
+            throw new APIError("Character not found", error.status || 500)
         }
     }
 

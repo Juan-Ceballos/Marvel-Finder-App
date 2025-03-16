@@ -1,3 +1,4 @@
+// class representing a marvel character and properties like name
 class MarvelCharacter {
     constructor(id, name, description, resourceURI, thumbnail, comics) {
         this.id = id
