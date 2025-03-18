@@ -23,9 +23,7 @@ describe("Marvel API Integration Test", () => {
 describe("Marvel Service fetch character by name", () => {
     it("should fetch a character using marvel-api-service", 
         async () => {
-            const response = await marvelAPIService.fetchCharacter("Wolverine")
-                .then(data => console.log(data))
-                .catch(err => console.log(err))
+            const response = await marvelAPIService.fetchCharacter("wolverine")
 
             expect(response).toBeDefined()
             expect(response.data).toBeDefined()
