@@ -13,6 +13,16 @@ async function getCharacter() {
   }
 }
 
+async function getParseCharacter(name) {
+  try {
+    const character = await marvelAPIService.parseCharacter(name)
+    return character
+  } catch(error) {
+    console.log(error)
+    throw error
+  }
+}
+
 function App() {
   const [count, setCount] = useState(0)
   getCharacter().then(character => {
@@ -20,6 +30,13 @@ function App() {
   }).catch(error => {
     console.log(error)
   })
+
+  getParseCharacter("wolverine").then(character => {
+    console.log(character)
+  }).catch(error => {
+    console.log(error)
+  })
+
   return (
     <>
       <ProfileContainer />

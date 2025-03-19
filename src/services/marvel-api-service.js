@@ -22,11 +22,25 @@ class MarvelAPIService {
     async fetchCharacter (name) {
         try {
             const character = await marvelComicsAPI.getCharacterByName({name})
+            console.log(character.attributionText)
             return character
         } catch (error) {
             throw new Error('Network Error during fetch for parsing', error)
         }
-        //mcomicsAPI = object wiht properties getCharacterByName
+    }
+
+    async parseCharacter(name) {
+        try {
+            const characterData = await this.fetchCharacter(name)
+            if (characterData.data.results.length === 0) {
+                throw new Error(`No character found with name: ${name}`)
+            }
+            const resultCharacter = characterData.data.results[0]
+            const marvelCharacter = new MarvelCharacter(resultCharacter)
+            return marvelCharacter
+        } catch(error) {
+            throw new Error("error parsing", error)
+        }
     }
 
     // async fetchCharacter (name) {

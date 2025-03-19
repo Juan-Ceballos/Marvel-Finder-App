@@ -4,9 +4,6 @@ export class MarvelCharacter {
         this.id = data.id
         this.name = data.name
         this.description = data.description
-        this.resourceURI = data.resourceURI
-        this.thumbnail = data.thumbnail
-        this.comics = data.comics
     }
 
     static fromJSON(json) {
