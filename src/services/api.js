@@ -9,7 +9,6 @@ import {
     RateLimitError
 } from './error-service.js'
 
-
 // wrapper function to abstract away the use of fetch and process involved such as
 // calling fetch, managing api keys, handling response, and formatting url 
 export const createMarvelAPI = ({
@@ -17,13 +16,6 @@ export const createMarvelAPI = ({
     publicKey = import.meta.env.VITE_MARVEL_PUBLIC_KEY,
     privateKey = import.meta.env.VITE_MARVEL_PRIVATE_KEY
 } = {}) => {
-    // possible endpoints
-    const COMICS_ENDPOINT = "comics"
-    const CHARACTERS_ENDPOINT = "characters"
-    const CREATORS_ENDPOINT = "creators"
-    const EVENTS_ENDPOINT = "events"
-    const SERIES_ENDPOINT = "series"
-    const STORIES_ENDPOINT = "stories"
     
     // set up hash using timestamp and keys
     const ts = Date.now()
@@ -91,7 +83,7 @@ export const createMarvelAPI = ({
     }
 
     return {
-        getCharacterByName: (params) => request(CHARACTERS_ENDPOINT, params)
+        marvelFetchRequest: (endpoint, params) => request(endpoint, params)
     }
 }
 
