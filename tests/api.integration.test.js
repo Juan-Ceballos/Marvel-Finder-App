@@ -33,3 +33,27 @@ describe("Marvel Service fetch character by name", () => {
     )
 })
 
+describe("Marvel parse character response", () => {
+    it("should fetch and parse a character into Character class",
+        async() => {
+            const response = await marvelAPIService.parseCharacter("wolverine")
+
+            expect(response).toBeDefined()
+            expect(response.name).toBeDefined
+        }
+    )
+})
+
+describe("Marvel parse character responses into array", () => {
+    it("should fetch and parse several characters and return array",
+        async() => {
+            const characters = await marvelAPIService.parsePopularCharacters(["wolverine", "cyclops", "storm"])
+            
+            expect(Array.isArray(characters)).toBe(true)
+            expect(characters.length).toBeGreaterThan(2)
+            const character = characters.find((char) => char.name === "Wolverine")
+            expect(character).toBeDefined()
+        }
+    )
+})
+

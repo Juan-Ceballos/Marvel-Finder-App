@@ -43,26 +43,17 @@ class MarvelAPIService {
         }
     }
 
-    // async fetchCharacter (name) {
-    //     try {
-    //         const response = await marvelComicsAPI.getCharacterByName(name)
+    async parsePopularCharacters(names) {
+        try {
+            const popularCharacters = await Promise.all(
+                names.map(name => this.parseCharacter(name))
+            )
+            return popularCharacters
+        } catch(error) {
+            throw new Error("error parsing characters into array", error)
+        }
+    }
 
-    //         if (!response.ok) {
-    //             throw new Error('Network Error during parsing')
-    //         }
-    //         // is this redundant if i get back response.json() from handle response
-    //         const data = await response.json()
-    //         const marvelCharacter = new MarvelCharacter(data)
-    //         if (!marvelCharacter) {
-    //             throw new Error('error parsing character to object')
-    //         }
-    
-    //         return marvelCharacter
-    //     } catch (error) {
-    //         console.error('Error fetching character:', error)
-    //         throw error
-    //     }    
-    // }
 }
 
 const marvelAPIService = new MarvelAPIService()

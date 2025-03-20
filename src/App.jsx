@@ -23,6 +23,16 @@ async function getParseCharacter(name) {
   }
 }
 
+async function getParseCharacters(names) {
+  try {
+    const character = await marvelAPIService.parsePopularCharacters(names)
+    return character
+  } catch(error) {
+    console.log(error)
+    throw error
+  }
+}
+
 function App() {
   const [count, setCount] = useState(0)
   getCharacter().then(character => {
@@ -32,6 +42,12 @@ function App() {
   })
 
   getParseCharacter("wolverine").then(character => {
+    console.log(character)
+  }).catch(error => {
+    console.log(error)
+  })
+
+  getParseCharacters(["wolverine", "cyclops", "storm"]).then(character => {
     console.log(character)
   }).catch(error => {
     console.log(error)
