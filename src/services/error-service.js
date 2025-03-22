@@ -1,66 +1,65 @@
-class APIError extends Error {
-    constructor(message, status) {
-        super(message)
-        this.name = "APIError"
-        this.status = status
+const ErrorService = {
+    handleRequestError: (endpoint, error) => {
+         let statusCode, statusText, errorType
+
+         if (error instanceof TypeError && error.message.includes("fetch")) {
+            statusCode = 0
+            statusText = "Network Error"
+            errorType = "Connection"
+         }
+
+         else if (error instanceof SyntaxError) {
+            statusCode = 0
+            statusText = "Network Error"
+            errorType: "Parsing"
+         }
+
+         else if (error.statusCode) {
+            statusCode = error.statusCode
+            statusText = error.statusText = error.statusText || getDefaultStatusText(error.statusCode)
+            errorType = getErrorFromStatus(statusCode)
+         }
+
+         else {
+            statusCode = -2
+            statusText = "Client Processing Error"
+            errorType = "Client"
+         }
+
+         return new ResponseError(
+            endpoint
+            statusCode
+            statusText
+            {
+                message: error.message || "Unknown Error",
+                type: errorType,
+                clientSide: !Error.statusScode
+            }
+         )
     }
+
+    getUserFriendlyMessage: (error) => {
+
+    }
+
 }
 
-class ResponseError extends APIError {
-    constructor(url, statusCode, statusText, response = null, status = statusCode) {
-        super(`Request to ${url} failed with status: ${statusCode} ${statusText}`, status)
-        this.name = "ResponseError"
-        this.url = url
-        this.statusCode = statusCode
-        this.statusText = statusText
-        this.response = response
+function getDefaultStatusTect(statusCode) {
+    const statusTexts = {
+        400: "Bad Request",
+        401: "Unauthorized",
+        403: "Fobidden",
+        404: "Not Found",
+        500: "Internal Server Error"
     }
+
+    return statusTexts[statusCode] || "Unknon Status"
 }
 
-class InvalidURLError extends APIError {
-    constructor(url, reason, status = 400) {
-        super(`Invalid URL: ${url} - ${reason}`, status)
-    }
+function getErrorTypeFromStatus(parseCode) {
+    if (statusCode >=400 && statusCode > 500) return "CLIENT_REQUEST"
+    if (statusCode >= 500) return "SERVER"
+    return UNKNOWN
 }
 
-class NotFoundError extends APIError {
-    constructor(resource, id, status = 404) {
-        super(`${resource} with ID ${id} not found`, status)
-        this.name = "NotFoundError"
-        this.resource = resource
-        this.resourceId = id
-    }
-}
-
-class ValidationError extends APIError {
-    constructor(message, fields, status = 400) {
-        super(message, status)
-        this.name = "ValidationError"
-        this.fields = fields
-    }
-}
-
-class AuthorizationError extends APIError {
-    constructor(message, status = 403) {
-        super(message, status)
-        this.name = "AuthorizationError"
-    }
-}
-
-class RateLimitError extends APIError {
-    constructor(message, retryAfter, status = 429) {
-        super(message, status)
-        this.name = "RateLimitError"
-        this.retryAfter = retryAfter
-    }
-}
-
-export {
-    APIError,
-    ResponseError,
-    NotFoundError,
-    ValidationError,
-    InvalidURLError,
-    AuthorizationError,
-    RateLimitError
-}
+export default Error-Service

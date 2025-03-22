@@ -7,7 +7,7 @@ import {
     InvalidURLError,
     AuthorizationError,
     RateLimitError
-} from './error-service.js'
+} from './custom-error.js'
 
 // wrapper function to abstract away the use of fetch and process involved such as
 // calling fetch, managing api keys, handling response, and formatting url 
