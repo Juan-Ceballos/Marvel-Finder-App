@@ -1,3 +1,13 @@
+import {
+    APIError,
+    ResponseError,
+    NotFoundError,
+    ValidationError,
+    InvalidURLError,
+    AuthorizationError,
+    RateLimitError
+} from './custom-error.js'
+
 const ErrorService = {
     handleRequestError: (endpoint, error) => {
          let statusCode, statusText, errorType
@@ -17,7 +27,7 @@ const ErrorService = {
          else if (error.statusCode) {
             statusCode = error.statusCode
             statusText = error.statusText = error.statusText || getDefaultStatusText(error.statusCode)
-            errorType = getErrorFromStatus(statusCode)
+            errorType = getErrorTypeFromStatus(statusCode)
          }
 
          else {
@@ -62,7 +72,7 @@ const ErrorService = {
 
 }
 
-function getDefaultStatusTect(statusCode) {
+function getDefaultStatusText(statusCode) {
     const statusTexts = {
         400: "Bad Request",
         401: "Unauthorized",
@@ -74,10 +84,10 @@ function getDefaultStatusTect(statusCode) {
     return statusTexts[statusCode] || "Unknon Status"
 }
 
-function getErrorTypeFromStatus(parseCode) {
-    if (statusCode >=400 && statusCode > 500) return "CLIENT_REQUEST"
+function getErrorTypeFromStatus(statusCode) {
+    if (statusCode >=400 && statusCode < 500) return "CLIENT_REQUEST"
     if (statusCode >= 500) return "SERVER"
-    return UNKNOWN
+    return "UNKNOWN"
 }
 
-export default Error-Service
+export default ErrorService
