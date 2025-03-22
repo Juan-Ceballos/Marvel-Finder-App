@@ -21,7 +21,7 @@ const ErrorService = {
          else if (error instanceof SyntaxError) {
             statusCode = 0
             statusText = "Network Error"
-            errorType: "Parsing"
+            errorType = "Parsing"
          }
 
          else if (error.statusCode) {
