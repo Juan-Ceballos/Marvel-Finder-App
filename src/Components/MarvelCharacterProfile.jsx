@@ -1,8 +1,8 @@
 // a component for a div with character image
 function MarvelCharacterTN({imgURL, placeholder}) {
     return (
-        <div>
-            <img src={imgURL} alt={placeholder} />
+        <div className="character-image-container">
+            <img src={imgURL} alt={placeholder} className="character-image"/>
         </div>
     )
 }
@@ -10,8 +10,8 @@ function MarvelCharacterTN({imgURL, placeholder}) {
 // a component for a div with name label
 function MarvelNameLabel({name}) {
     return (
-        <div>
-            <p>{name}</p>
+        <div className="character-name-container">
+            <p className="character-name">{name}</p>
         </div>
     )
 }
@@ -19,9 +19,9 @@ function MarvelNameLabel({name}) {
 // default export component holds the image and name div
 export default function ProfileContainer({imgURL, name}) {
     return (
-        <>
+        <div className="profile-container">
             <MarvelCharacterTN imgURL={imgURL} placeholder={name}/>
             <MarvelNameLabel name={name}/>
-        </>
+        </div>
     )
 }
