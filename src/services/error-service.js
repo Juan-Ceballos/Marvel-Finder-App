@@ -1,16 +1,15 @@
 import {
     APIError,
     ResponseError,
-    NotFoundError,
-    ValidationError,
-    InvalidURLError,
-    AuthorizationError,
     RateLimitError
 } from './custom-error.js'
 
 const ErrorService = {
     handleRequestError: (endpoint, error) => {
-         let statusCode, statusText, errorType
+         let statusCode = error.statusCode
+         let statusText= "Network Error"
+         let errorType = "UNKNOWN"
+         let retryAfter = null
 
          if (error instanceof TypeError && error.message.includes("fetch")) {
             statusCode = 0
@@ -20,12 +19,22 @@ const ErrorService = {
 
          else if (error instanceof SyntaxError) {
             statusCode = 0
-            statusText = "Network Error"
+            statusText = "Parsing Error"
             errorType = "Parsing"
          }
 
-         else if (error.statusCode) {
+        else if (error instanceof RateLimitError) {
+            retryAfter = error.retryAfter
+            return new RateLimitError(error.message, retryAfter, 429)
+        }
+
+        else if (error instanceof ResponseError) {
             statusCode = error.statusCode
+            statusText = error.statusText
+            errorType = getErrorTypeFromStatus(statusCode)
+        }
+
+         else if (error.statusCode) {
             statusText = error.statusText || getDefaultStatusText(error.statusCode)
             errorType = getErrorTypeFromStatus(statusCode)
          }
@@ -43,7 +52,7 @@ const ErrorService = {
             {
                 message: error.message || "Unknown Error",
                 type: errorType,
-                clientSide: !Error.statusCode
+                clientSide: statusCode === 0 || statusCode === -2
             }
          )
     },
@@ -62,6 +71,8 @@ const ErrorService = {
                 return "You don't have permission to access this resource."
             } else if (error.statusCode === 404) {
                 return "The requested information could not be found."
+            } else if (error.statusCode === 429) {
+                return "Rate limit exceeded. Please wait and try again."
             } else if (error.statusCode >= 500) {
                 return "The server encountered a problem. Please try again later."
             } else {
@@ -78,10 +89,11 @@ function getDefaultStatusText(statusCode) {
         401: "Unauthorized",
         403: "Fobidden",
         404: "Not Found",
+        429: "Too Many Requests",
         500: "Internal Server Error"
     }
 
-    return statusTexts[statusCode] || "Unknon Status"
+    return statusTexts[statusCode] || "Unknown Status"
 }
 
 function getErrorTypeFromStatus(statusCode) {

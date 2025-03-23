@@ -2,10 +2,6 @@ import md5 from 'md5'
 import {
     APIError,
     ResponseError,
-    NotFoundError,
-    ValidationError,
-    InvalidURLError,
-    AuthorizationError,
     RateLimitError
 } from './custom-error.js'
 
