@@ -26,7 +26,7 @@ const ErrorService = {
 
          else if (error.statusCode) {
             statusCode = error.statusCode
-            statusText = error.statusText = error.statusText || getDefaultStatusText(error.statusCode)
+            statusText = error.statusText || getDefaultStatusText(error.statusCode)
             errorType = getErrorTypeFromStatus(statusCode)
          }
 
@@ -43,7 +43,7 @@ const ErrorService = {
             {
                 message: error.message || "Unknown Error",
                 type: errorType,
-                clientSide: !Error.statusScode
+                clientSide: !Error.statusCode
             }
          )
     },
