@@ -18,9 +18,6 @@ function MarvelNameLabel({name}) {
 
 // default export component holds the image and name div
 export default function ProfileContainer({imgURL, name}) {
-
-
-
     return (
         <>
             <MarvelCharacterTN imgURL={imgURL} placeholder={name}/>
