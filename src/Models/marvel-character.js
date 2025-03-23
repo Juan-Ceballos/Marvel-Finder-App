@@ -14,3 +14,4 @@ export class MarvelCharacter {
 export default {
     MarvelCharacter
 }
+
